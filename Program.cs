@@ -27,6 +27,11 @@ var app = builder.Build();
 
 ConcurrentDictionary<string, int> OldHashs = new();
 
+var cleanupTimer = new Timer(_ => {
+  OldHashs.Clear();
+  Console.WriteLine($"[{DateTime.Now}] Dicionário de hashes limpo.");
+}, null, TimeSpan.FromHours(24), TimeSpan.FromHours(24));
+
 app.MapPost("/", async (HttpRequest request, string Name, string Team) => {
   var from_ = await request.ReadFormAsync();
   var files = from_.Files.ToList();
